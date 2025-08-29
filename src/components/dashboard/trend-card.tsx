@@ -1,5 +1,6 @@
 "use client"
 
+import * as React from "react"
 import {
   Card,
   CardContent,
@@ -20,8 +21,30 @@ interface TrendCardProps {
   trendData: MicroTrendDetectionOutput
 }
 
+interface Trend {
+  topic: string;
+  leadTime: string;
+  explanation: string;
+  relevance: "High" | "Medium" | null;
+}
+
 export function TrendCard({ trendData }: TrendCardProps) {
-  if (!trendData?.trendingTopics || !trendData.leadTimes || !trendData.explanations) {
+  const [trendingTopics, setTrendingTopics] = React.useState<Trend[]>([]);
+
+  React.useEffect(() => {
+    if (trendData?.trendingTopics) {
+      const topicsWithRelevance = trendData.trendingTopics.map((topic, index) => ({
+        topic,
+        leadTime: trendData.leadTimes[index],
+        explanation: trendData.explanations[index],
+        relevance: Math.random() > 0.5 ? "High" : "Medium"
+      }));
+      setTrendingTopics(topicsWithRelevance);
+    }
+  }, [trendData]);
+  
+
+  if (!trendData?.trendingTopics || trendData.trendingTopics.length === 0) {
     return (
         <Card>
             <CardHeader>
@@ -34,13 +57,6 @@ export function TrendCard({ trendData }: TrendCardProps) {
         </Card>
     );
   }
-
-  const trendingTopics = trendData.trendingTopics.map((topic, index) => ({
-    topic,
-    leadTime: trendData.leadTimes[index],
-    explanation: trendData.explanations[index],
-    relevance: Math.random() > 0.5 ? "High" : "Medium"
-  }));
   
   return (
     <Card>
@@ -55,7 +71,7 @@ export function TrendCard({ trendData }: TrendCardProps) {
               <AccordionTrigger>
                 <div className="flex flex-wrap items-center gap-2 text-left">
                   <span>{trend.topic}</span>
-                  <Badge variant={trend.relevance === 'High' ? 'default' : 'secondary'} className={trend.relevance === 'High' ? 'bg-accent text-accent-foreground hover:bg-accent/80' : ''}>{trend.relevance}</Badge>
+                  {trend.relevance && <Badge variant={trend.relevance === 'High' ? 'default' : 'secondary'} className={trend.relevance === 'High' ? 'bg-accent text-accent-foreground hover:bg-accent/80' : ''}>{trend.relevance}</Badge>}
                 </div>
               </AccordionTrigger>
               <AccordionContent>
