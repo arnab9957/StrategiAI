@@ -1,3 +1,4 @@
+"use client"
 import {
   Card,
   CardContent,
@@ -10,13 +11,24 @@ import { Checkbox } from "@/components/ui/checkbox"
 import { Button } from "@/components/ui/button"
 import { ArrowRight } from "lucide-react"
 
-const todaysPlan = [
-  { id: "1", time: "9:00 AM", content: "Post a Reel about the new 'Sustainable Fashion Tech' trend.", platform: "Instagram", done: true },
-  { id: "2", time: "12:00 PM", content: "YouTube video premiere: 'AI in Film Making - A Deep Dive'.", platform: "YouTube", done: false },
-  { id: "3", time: "5:00 PM", content: "LinkedIn post sharing insights from the YouTube video.", platform: "LinkedIn", done: false },
-]
+interface ContentPlanCardProps {
+    contentPlan: string;
+}
 
-export function ContentPlanCard() {
+export function ContentPlanCard({ contentPlan }: ContentPlanCardProps) {
+    const dailyPlan = contentPlan.split('\n\n')[0];
+    const planItems = dailyPlan.split('\n').slice(1).map((item, index) => {
+        const [time, contentPart] = item.replace(/^- /, '').split(': ');
+        const [content, platform] = contentPart.split(' on ');
+        return {
+            id: `${index + 1}`,
+            time: time,
+            content: content.trim(),
+            platform: platform.replace(/\.$/, '').trim(),
+            done: Math.random() > 0.5
+        };
+    });
+    
   return (
     <Card>
       <CardHeader>
@@ -25,7 +37,7 @@ export function ContentPlanCard() {
       </CardHeader>
       <CardContent>
         <ul className="space-y-4">
-          {todaysPlan.map((item) => (
+          {planItems.map((item) => (
             <li key={item.id} className="flex items-start gap-4">
               <Checkbox id={`task-${item.id}`} checked={item.done} className="mt-1" />
               <div className="grid gap-1">

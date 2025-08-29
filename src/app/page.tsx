@@ -5,8 +5,19 @@ import { EngagementChart } from '@/components/dashboard/engagement-chart';
 import { PlatformConnectionsCard } from '@/components/dashboard/platform-connections-card';
 import { Button } from '@/components/ui/button';
 import { FilePlus } from 'lucide-react';
+import { generateSevenDayContentPlan } from '@/ai/flows/content-planner';
+import { microTrendDetection } from '@/ai/flows/micro-trend-detector';
 
-export default function DashboardPage() {
+export default async function DashboardPage() {
+  const contentPlanData = await generateSevenDayContentPlan({
+    brandDescription: 'An AI-powered social media strategy and content management tool.',
+    currentTrends: 'AI in film making, sustainable fashion tech, retro gaming revival',
+  });
+  
+  const trendData = await microTrendDetection({
+    query: 'AI in film making, sustainable fashion tech, retro gaming revival',
+  });
+
   return (
     <MainLayout>
       <div className="p-4 sm:p-6 lg:p-8 space-y-6">
@@ -29,8 +40,8 @@ export default function DashboardPage() {
           <div className="lg:col-span-2 space-y-6">
             <EngagementChart />
             <div className="grid md:grid-cols-2 gap-6">
-              <TrendCard />
-              <ContentPlanCard />
+              <TrendCard trendData={trendData}/>
+              <ContentPlanCard contentPlan={contentPlanData.contentPlan} />
             </div>
           </div>
           <div className="lg:col-span-1 space-y-6">

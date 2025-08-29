@@ -14,29 +14,21 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion"
 import { Badge } from "@/components/ui/badge"
+import { MicroTrendDetectionOutput } from "@/ai/flows/micro-trend-detector"
 
-const trendingTopics = [
-  {
-    topic: "AI in Film Making",
-    leadTime: "2 weeks",
-    explanation: "Generative AI tools for video and scriptwriting are becoming more accessible, sparking a wave of creative projects and discussions among indie filmmakers and major studios alike.",
-    relevance: "High"
-  },
-  {
-    topic: "Sustainable Fashion Tech",
-    leadTime: "1 month",
-    explanation: "Innovations in textile recycling and digital passports for clothing are gaining traction. Brands are leveraging this to appeal to eco-conscious consumers.",
-    relevance: "Medium"
-  },
-  {
-    topic: "Retro Gaming Revival",
-    leadTime: "3 days",
-    explanation: "A recent high-profile re-release of a classic console has sparked nostalgia. Influencers are live-streaming retro games, creating viral moments.",
-    relevance: "High"
-  },
-]
+interface TrendCardProps {
+  trendData: MicroTrendDetectionOutput
+}
 
-export function TrendCard() {
+export function TrendCard({ trendData }: TrendCardProps) {
+
+  const trendingTopics = trendData.trendingTopics.map((topic, index) => ({
+    topic,
+    leadTime: trendData.leadTimes[index],
+    explanation: trendData.explanations[index],
+    relevance: Math.random() > 0.5 ? "High" : "Medium"
+  }));
+  
   return (
     <Card>
       <CardHeader>
