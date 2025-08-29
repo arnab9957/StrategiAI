@@ -9,22 +9,53 @@ import {
 } from "@/components/ui/card"
 import { Checkbox } from "@/components/ui/checkbox"
 import { Button } from "@/components/ui/button"
-import { ArrowRight } from "lucide-react"
+import { ArrowRight, Loader } from "lucide-react"
 
 interface ContentPlanCardProps {
     contentPlan: string;
 }
 
 export function ContentPlanCard({ contentPlan }: ContentPlanCardProps) {
-    const dailyPlan = contentPlan.split('\n\n')[0];
-    const planItems = dailyPlan.split('\n').slice(1).map((item, index) => {
-        const [time, contentPart] = item.replace(/^- /, '').split(': ');
-        const [content, platform] = contentPart.split(' on ');
+    if (!contentPlan) {
+        return (
+            <Card>
+                <CardHeader>
+                    <CardTitle>Today's Content Plan</CardTitle>
+                    <CardDescription>Day 1 of your 7-day strategy.</CardDescription>
+                </CardHeader>
+                <CardContent className="flex items-center justify-center h-48">
+                    <Loader className="animate-spin" />
+                </CardContent>
+            </Card>
+        )
+    }
+
+    const dailyPlan = contentPlan.split('Day 1:')[1]?.split('Day 2:')[0]?.trim() || '';
+    
+    if (!dailyPlan) {
+      return (
+        <Card>
+          <CardHeader>
+            <CardTitle>Today's Content Plan</CardTitle>
+            <CardDescription>Day 1 of your 7-day strategy.</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <p>Could not parse content plan for today.</p>
+          </CardContent>
+        </Card>
+      )
+    }
+
+    const planItems = dailyPlan.split('*').slice(1).map((item, index) => {
+        const contentMatch = item.match(/\*\*Idea:\*\* "(.*?)"/);
+        const timeMatch = item.match(/\*\*Optimal Time:\*\* (.*?)$/m);
+        const platformMatch = item.match(/\((.*?)\s-/);
+
         return {
             id: `${index + 1}`,
-            time: time,
-            content: content.trim(),
-            platform: platform.replace(/\.$/, '').trim(),
+            time: timeMatch ? timeMatch[1].trim() : "N/A",
+            content: contentMatch ? contentMatch[1].trim() : "No content idea",
+            platform: platformMatch ? platformMatch[1].trim() : 'Social',
             done: Math.random() > 0.5
         };
     });

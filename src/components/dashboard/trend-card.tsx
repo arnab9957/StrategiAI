@@ -21,6 +21,19 @@ interface TrendCardProps {
 }
 
 export function TrendCard({ trendData }: TrendCardProps) {
+  if (!trendData?.trendingTopics || !trendData.leadTimes || !trendData.explanations) {
+    return (
+        <Card>
+            <CardHeader>
+                <CardTitle>Trend Discovery</CardTitle>
+                <CardDescription>Emerging topics with high potential.</CardDescription>
+            </CardHeader>
+            <CardContent>
+                <p>No trending topics found.</p>
+            </CardContent>
+        </Card>
+    );
+  }
 
   const trendingTopics = trendData.trendingTopics.map((topic, index) => ({
     topic,
