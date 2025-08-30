@@ -46,12 +46,12 @@ export function SidebarNav() {
 
   return (
     <>
-      <SidebarHeader className="p-4">
+      <SidebarHeader className="p-4 border-b">
         <Link href="/">
           <Logo className="h-7 w-auto text-foreground" />
         </Link>
       </SidebarHeader>
-      <SidebarContent className="p-2">
+      <SidebarContent className="flex-1 overflow-y-auto p-2">
         <SidebarMenu>
           {menuItems.map((item) => (
             <SidebarMenuItem key={item.label}>
@@ -60,7 +60,7 @@ export function SidebarNav() {
                   isActive={pathname === item.href}
                   tooltip={{ children: item.label }}
                 >
-                  <item.icon />
+                  <item.icon className="h-4 w-4" />
                   <span>{item.label}</span>
                 </SidebarMenuButton>
               </Link>
@@ -73,7 +73,7 @@ export function SidebarNav() {
         </div>
         <div className="px-2 space-y-1">
             {socialPlatforms.map((platform) => (
-                <Button variant="ghost" key={platform.name} className="w-full justify-start gap-2 group-data-[collapsible=icon]:justify-center group-data-[collapsible=icon]:size-8 group-data-[collapsible=icon]:p-0">
+                <Button variant="ghost" key={platform.name} className="w-full justify-start gap-2 group-data-[collapsible=icon]:justify-center group-data-[collapsible=icon]:size-8 group-data-[collapsible=icon]:p-0 h-9">
                     <platform.icon className="size-4" />
                     <span className="group-data-[collapsible=icon]:hidden">{platform.name}</span>
                     {platform.connected && <CheckCircle className="ml-auto w-4 h-4 text-primary group-data-[collapsible=icon]:hidden"/>}
@@ -83,16 +83,16 @@ export function SidebarNav() {
       </SidebarContent>
       <SidebarFooter className="p-4 border-t">
         <div className="flex items-center gap-3">
-          <Avatar>
+          <Avatar className="h-8 w-8">
             <AvatarImage src="https://picsum.photos/100/100" alt="User" data-ai-hint="female person" />
             <AvatarFallback>U</AvatarFallback>
           </Avatar>
-          <div className="flex flex-col group-data-[collapsible=icon]:hidden">
-            <span className="font-semibold text-sm">Jane Doe</span>
-            <span className="text-xs text-muted-foreground">jane.doe@example.com</span>
+          <div className="flex flex-col group-data-[collapsible=icon]:hidden min-w-0 flex-1">
+            <span className="font-semibold text-sm truncate">Jane Doe</span>
+            <span className="text-xs text-muted-foreground truncate">jane.doe@example.com</span>
           </div>
-          <Button variant="ghost" size="icon" className="ml-auto group-data-[collapsible=icon]:hidden">
-            <LogOut />
+          <Button variant="ghost" size="icon" className="ml-auto group-data-[collapsible=icon]:hidden h-8 w-8">
+            <LogOut className="h-4 w-4" />
           </Button>
         </div>
       </SidebarFooter>

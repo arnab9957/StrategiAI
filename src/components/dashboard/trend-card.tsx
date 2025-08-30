@@ -15,6 +15,7 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion"
 import { Badge } from "@/components/ui/badge"
+import { Skeleton } from "@/components/ui/skeleton"
 import { MicroTrendDetectionOutput } from "@/ai/flows/micro-trend-detector"
 
 interface TrendCardProps {
@@ -30,17 +31,19 @@ interface Trend {
 
 export function TrendCard({ trendData }: TrendCardProps) {
   const [trendingTopics, setTrendingTopics] = React.useState<Trend[]>([]);
+  const [isLoading, setIsLoading] = React.useState(true);
 
   React.useEffect(() => {
-    if (trendData?.trendingTopics) {
+    if (trendData?.trendingTopics && trendData.trendingTopics.length > 0) {
       const topicsWithRelevance = trendData.trendingTopics.map((topic, index) => ({
         topic,
-        leadTime: trendData.leadTimes[index],
-        explanation: trendData.explanations[index],
+        leadTime: trendData.leadTimes?.[index] || "Unknown",
+        explanation: trendData.explanations?.[index] || "No explanation available",
         relevance: Math.random() > 0.5 ? "High" : "Medium"
       }));
       setTrendingTopics(topicsWithRelevance);
     }
+    setIsLoading(false);
   }, [trendData]);
   
 
@@ -55,6 +58,25 @@ export function TrendCard({ trendData }: TrendCardProps) {
                 <p>No trending topics found.</p>
             </CardContent>
         </Card>
+    );
+  }
+
+  if (isLoading) {
+    return (
+      <Card>
+        <CardHeader>
+          <CardTitle>Trend Discovery</CardTitle>
+          <CardDescription>Emerging topics with high potential.</CardDescription>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          {[1, 2, 3].map((i) => (
+            <div key={i} className="space-y-2">
+              <Skeleton className="h-4 w-3/4" />
+              <Skeleton className="h-3 w-1/2" />
+            </div>
+          ))}
+        </CardContent>
+      </Card>
     );
   }
   

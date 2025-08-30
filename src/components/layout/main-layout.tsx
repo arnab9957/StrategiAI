@@ -10,13 +10,13 @@ import { Header } from '@/components/layout/header';
 export function MainLayout({ children }: { children: ReactNode }) {
   return (
     <SidebarProvider>
-      <div className="bg-background">
-        <Sidebar collapsible="icon">
+      <div className="bg-background h-screen flex">
+        <Sidebar collapsible="icon" className="border-r">
           <SidebarNav />
         </Sidebar>
-        <SidebarInset>
+        <SidebarInset className="flex flex-col flex-1 min-w-0">
           <Header />
-          <main className="min-h-[calc(100vh-4rem)]">
+          <main className="flex-1 overflow-auto">
             {children}
           </main>
         </SidebarInset>
